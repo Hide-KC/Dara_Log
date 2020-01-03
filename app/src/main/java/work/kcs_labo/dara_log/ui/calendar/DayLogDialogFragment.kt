@@ -21,9 +21,16 @@ class DayLogDialogFragment : DialogFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    val viewModel = (activity as CalendarActivity).obtainViewModel()
+
     val binding = DataBindingUtil.inflate<DayLogDialogFragmentBinding>(
       inflater, R.layout.day_log_dialog_fragment, container, false
-    )
+    ).also {
+      it.viewModel = viewModel
+      it.lifecycleOwner = this
+    }
+
+
 
     return binding.root
   }
