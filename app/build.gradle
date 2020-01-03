@@ -69,6 +69,10 @@ dependencies {
   implementation "androidx.room:room-ktx:${versions.room}"
   kapt "androidx.room:room-compiler:${versions.room}"
 
+  // Glide
+  implementation "com.github.bumptech.glide:glide:${versions.glide}"
+  kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+
   // RecyclerView
   implementation "androidx.recyclerview:recyclerview:${versions.recyclerview}"
 
