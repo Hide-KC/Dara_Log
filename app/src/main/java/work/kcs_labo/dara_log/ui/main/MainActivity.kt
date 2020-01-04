@@ -12,6 +12,7 @@ import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.MainActivityBinding
 import work.kcs_labo.dara_log.ui.calendar.CalendarActivity
 
+
 class MainActivity : AppCompatActivity() {
   private lateinit var viewModel: MainActivityViewModel
 

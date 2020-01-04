@@ -34,6 +34,9 @@ android {
       includeAndroidResources = true
     }
   }
+  defaultConfig {
+    vectorDrawables.useSupportLibrary = true
+  }
 }
 
 dependencies {
