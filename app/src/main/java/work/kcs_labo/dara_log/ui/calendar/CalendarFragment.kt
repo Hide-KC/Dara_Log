@@ -31,7 +31,7 @@ class CalendarFragment : Fragment() {
   }
 
   companion object {
-    fun getInstance(bundle: Bundle?): CalendarFragment {
+    fun getInstance(bundle: Bundle? = null): CalendarFragment {
       val fragment = CalendarFragment()
       fragment.arguments = bundle
       return fragment

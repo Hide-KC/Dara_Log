@@ -1,3 +1,7 @@
 <resources>
-  <string name="app_name">Dara_Log</string>
+  <string name="app_name">だらろぐ</string>
+  <string name="make_log">記録する</string>
+  <string name="tweet_log">ついーとする</string>
+  <string name="calendar">カレンダー</string>
+
 </resources>
