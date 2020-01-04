@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         CheckBoxEntity("掃除をした", shortText = "掃除", imageId = R.drawable.ic_soujisuru_hito),
         CheckBoxEntity("創作した", shortText = "創作活動", imageId = R.drawable.ic_sousakusuru_hito),
         CheckBoxEntity("送迎した", shortText = "送り迎え", imageId = R.drawable.ic_oyako),
-        CheckBoxEntity("予備１", shortText = "鷹のポーズ", imageId = R.drawable.ic_takanoposesuru_hito),
-        CheckBoxEntity("予備２", shortText = "なんか", imageId = R.drawable.ic_yahooosuru_hito)
+        CheckBoxEntity("鷹のポーズ", shortText = "鷹のポーズ", imageId = R.drawable.ic_takanoposesuru_hito),
+        CheckBoxEntity("そのほか", shortText = "そのほか", imageId = R.drawable.ic_yahooosuru_hito)
       ))
     }
 
