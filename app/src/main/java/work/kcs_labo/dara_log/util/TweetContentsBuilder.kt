@@ -9,17 +9,16 @@ object TweetContentsBuilder {
     if (checkedList.isEmpty()) {
       builder.append("だらだらしています。")
     } else {
-      builder.append("だらけずに")
+      builder.append("だらけずに ")
       for (e in entities) {
         if (e.isChecked) {
-          builder.append("${e.shortText},")
+          builder.append("${e.shortText} ")
         }
       }
-      builder.deleteCharAt(builder.lastIndex)
       builder.append("を実施しました。")
     }
 
-    builder.append("https://play.google.com/store/apps/developer?id=KC%27s+Development+Labo")
+    builder.append("#だらろぐ ${Constants.appUrl}")
     return builder.toString()
   }
 }
