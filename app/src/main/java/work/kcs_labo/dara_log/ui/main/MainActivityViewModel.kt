@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.domain.entity.CheckBoxEntity
+import work.kcs_labo.dara_log.util.LiveEvent
 import kotlin.coroutines.CoroutineContext
 
 class MainActivityViewModel(private val app: Application) : AndroidViewModel(app), CoroutineScope {
@@ -25,22 +26,17 @@ class MainActivityViewModel(private val app: Application) : AndroidViewModel(app
   val imageSrcLiveData: LiveData<Int>
     get() = _imageSrcLiveData
 
-  private val _onClickMakeLogBtnEvent = MutableLiveData<Unit>()
-  val onClickMakeLogBtnEvent: LiveData<Unit>
-    get() = _onClickMakeLogBtnEvent
-
-  private val _onClickTweetLogBtnEvent = MutableLiveData<Unit>()
-  val onClickTweetLogBtnEvent: LiveData<Unit>
-    get() = _onClickTweetLogBtnEvent
+  val onClickMakeLogBtnEvent = LiveEvent<Unit>()
+  val onClickTweetLogBtnEvent = LiveEvent<Unit>()
 
   private var position: Int = 0
 
   fun onClickMakeLogBtn() {
-    _onClickMakeLogBtnEvent.value = Unit
+    onClickMakeLogBtnEvent.call(Unit)
   }
 
   fun onClickTweetLogBtn() {
-    _onClickTweetLogBtnEvent.value = Unit
+    onClickTweetLogBtnEvent.call(Unit)
   }
 
   fun setCheckBoxEntities(entities: List<CheckBoxEntity>) {

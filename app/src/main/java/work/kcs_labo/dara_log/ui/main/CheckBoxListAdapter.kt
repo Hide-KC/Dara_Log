@@ -2,12 +2,10 @@ package work.kcs_labo.dara_log.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CheckBox
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.CustomCheckboxBinding
-import work.kcs_labo.dara_log.domain.entity.CheckBoxEntity
 
 class CheckBoxListAdapter(
   private val viewModel: MainActivityViewModel,
@@ -36,7 +34,7 @@ class CheckBoxListAdapter(
       holder.binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
         viewModel.setCheckState(entity.copy(isChecked = isChecked))
         if (isChecked) {
-          when(entity.imageId) {
+          when (entity.imageId) {
             -1 -> viewModel.setImageId(R.drawable.ic_gattu_pause)
             else -> viewModel.setImageId(entity.imageId)
           }
@@ -52,5 +50,6 @@ class CheckBoxListAdapter(
     }
   }
 
-  class CheckBoxViewHolder(val binding: CustomCheckboxBinding) : RecyclerView.ViewHolder(binding.root)
+  class CheckBoxViewHolder(val binding: CustomCheckboxBinding) :
+    RecyclerView.ViewHolder(binding.root)
 }

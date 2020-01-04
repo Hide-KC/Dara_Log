@@ -1,8 +1,6 @@
 package work.kcs_labo.dara_log.util
 
-import android.content.Intent
 import work.kcs_labo.dara_log.domain.entity.CheckBoxEntity
-import java.lang.StringBuilder
 
 object TweetContentsBuilder {
   fun create(entities: List<CheckBoxEntity>): String {
@@ -12,7 +10,7 @@ object TweetContentsBuilder {
       builder.append("だらだらしています。")
     } else {
       builder.append("だらけずに")
-      for(e in entities) {
+      for (e in entities) {
         if (e.isChecked) {
           builder.append("${e.shortText},")
         }
@@ -21,7 +19,7 @@ object TweetContentsBuilder {
       builder.append("を実施しました。")
     }
 
-    builder.append("https://play.google.com/store/apps/details?id=com.kc.comiketter2")
+    builder.append("https://play.google.com/store/apps/developer?id=KC%27s+Development+Labo")
     return builder.toString()
   }
 }
