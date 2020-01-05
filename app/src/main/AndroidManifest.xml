@@ -10,9 +10,9 @@
 
   <application
     android:allowBackup="true"
-    android:icon="@drawable/ic_yokoninattekanngaeru_hito"
+    android:icon="@drawable/ic_yokoninattekanngaeru_hito_zzz"
     android:label="@string/app_name"
-    android:roundIcon="@drawable/ic_yokoninattekanngaeru_hito"
+    android:roundIcon="@drawable/ic_yokoninattekanngaeru_hito_zzz"
     android:supportsRtl="true"
     android:theme="@style/AppTheme"
     android:fullBackupContent="@xml/backup_descriptor">

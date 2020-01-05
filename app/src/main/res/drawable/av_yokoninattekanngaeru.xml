@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:drawable="@drawable/ic_yokoninattekanngaeru_hito_zzz">
+
+  <target
+    android:animation="@animator/anim_yokoninattekanngaeru_z1"
+    android:name="z1_path"
+    />
+  <target
+    android:animation="@animator/anim_yokoninattekanngaeru_z2"
+    android:name="z2_path"
+    />
+  <target
+    android:animation="@animator/anim_yokoninattekanngaeru_z3"
+    android:name="z3_path"
+    />
+
+</animated-vector>

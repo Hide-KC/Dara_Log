@@ -22,7 +22,7 @@ class MainActivityViewModel(private val app: Application) : AndroidViewModel(app
   val checkBoxEntitiesLiveData: LiveData<List<CheckBoxEntity>>
     get() = _checkBoxEntitiesLiveData
 
-  private val _imageSrcLiveData = MutableLiveData<Int>(R.drawable.ic_yokoninattekanngaeru_hito)
+  private val _imageSrcLiveData = MutableLiveData<Int>(R.drawable.av_yokoninattekanngaeru)
   val imageSrcLiveData: LiveData<Int>
     get() = _imageSrcLiveData
 

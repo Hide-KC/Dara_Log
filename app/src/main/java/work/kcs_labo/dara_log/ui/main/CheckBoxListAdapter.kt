@@ -43,7 +43,7 @@ class CheckBoxListAdapter(
           if (checkedEntities.isNotEmpty()) {
             viewModel.setImageId(checkedEntities[0].imageId)
           } else {
-            viewModel.setImageId(R.drawable.ic_yokoninattekanngaeru_hito)
+            viewModel.setImageId(R.drawable.av_yokoninattekanngaeru)
           }
         }
       }
