@@ -47,7 +47,7 @@ class MainFragment : Fragment() {
         val intent = Intent()
         intent.action = Intent.ACTION_SEND
         intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, TweetContentsBuilder.create(entities))
+        intent.putExtra(Intent.EXTRA_TEXT, TweetContentsBuilder.create(activity!!, entities))
         activity?.startActivity(Intent.createChooser(intent, ""))
       }
     })

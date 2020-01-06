@@ -1,9 +1,11 @@
 package work.kcs_labo.dara_log.util
 
+import android.content.Context
+import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.domain.entity.CheckBoxEntity
 
 object TweetContentsBuilder {
-  fun create(entities: List<CheckBoxEntity>): String {
+  fun create(context: Context, entities: List<CheckBoxEntity>): String {
     val builder = StringBuilder()
     val checkedList = entities.filter { e -> e.isChecked }
     if (checkedList.isEmpty()) {
@@ -18,7 +20,7 @@ object TweetContentsBuilder {
       builder.append("を実施しました。 ")
     }
 
-    builder.append("#だらろぐ ${Constants.appUrl}")
+    builder.append("#だらろぐ ${context.getString(R.string.app_url)}")
     return builder.toString()
   }
 }
