@@ -86,4 +86,13 @@ dependencies {
   // AssertJ
   testImplementation "org.assertj:assertj-core:${versions.assertj}"
   androidTestImplementation "org.assertj:assertj-core:${versions.assertj}"
+
+  // Firebase
+  implementation "com.google.firebase:firebase-analytics:${versions.firebase_core}"
+  implementation "com.google.firebase:firebase-ads:${versions.firebase_ads}"
+
+  // Google
+  implementation "com.google.android.gms:play-services-ads:${versions.play_ads}"
 }
+
+apply plugin: 'com.google.gms.google-services'

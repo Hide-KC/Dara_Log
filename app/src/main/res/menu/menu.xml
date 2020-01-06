@@ -6,5 +6,5 @@
     android:icon="@drawable/ic_calendar"
     android:title="@string/calendar"
     app:showAsAction="always"
-    android:visible="true" />
+    android:visible="false" />
 </menu>

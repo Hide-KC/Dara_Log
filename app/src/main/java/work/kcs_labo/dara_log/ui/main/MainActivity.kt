@@ -7,11 +7,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.MainActivityBinding
 import work.kcs_labo.dara_log.ui.calendar.CalendarActivity
@@ -26,6 +25,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    MobileAds.initialize(this, getString(R.string.admob_app_id))
 
     viewModel = obtainViewModel()
 

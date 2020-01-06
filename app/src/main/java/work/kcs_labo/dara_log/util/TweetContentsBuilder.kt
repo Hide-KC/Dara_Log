@@ -7,7 +7,7 @@ object TweetContentsBuilder {
     val builder = StringBuilder()
     val checkedList = entities.filter { e -> e.isChecked }
     if (checkedList.isEmpty()) {
-      builder.append("だらだらしています。")
+      builder.append("だらだらしています…… ")
     } else {
       builder.append("だらけずに ")
       for (e in entities) {
@@ -15,7 +15,7 @@ object TweetContentsBuilder {
           builder.append("${e.shortText} ")
         }
       }
-      builder.append("を実施しました。")
+      builder.append("を実施しました。 ")
     }
 
     builder.append("#だらろぐ ${Constants.appUrl}")

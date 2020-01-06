@@ -1,6 +1,7 @@
 package work.kcs_labo.dara_log.ui.main;
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.main_fragment.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.material.snackbar.Snackbar
 import work.kcs_labo.dara_log.BuildConfig
+import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.MainFragmentBinding
 import work.kcs_labo.dara_log.util.TweetContentsBuilder
 import java.util.*
@@ -19,6 +22,7 @@ import java.util.*
  * ProjectName Dara_Log
  */
 
+@Suppress("ConstantConditionIf")
 class MainFragment : Fragment() {
 
   override fun onCreateView(
@@ -32,6 +36,9 @@ class MainFragment : Fragment() {
       .also {
         it.viewModel = viewModel
         it.lifecycleOwner = this
+
+        val adRequest = AdRequest.Builder().build()
+        it.mainAdView?.loadAd(adRequest)
       }
 
     viewModel.onClickTweetLogBtnEvent.observe(this, "tweet", Observer {
@@ -52,13 +59,22 @@ class MainFragment : Fragment() {
           .filter { e -> e.isChecked }
         val date = Calendar.getInstance()
           .also {
-            if(BuildConfig.IS_DEBUG) {
-              it.set(2020, 1,1)
+            if (BuildConfig.IS_DEBUG) {
+              it.set(2020, 1, 1)
             } else {
               it.time
             }
           }
         viewModel.registerCommittedTasks(date, committed)
+        val messageBar =
+          Snackbar.make(binding.root, "記録しました。\nそのうちカレンダー表示も実装します。", Snackbar.LENGTH_LONG)
+            .also {
+              // TODO API違いによるカラーリソースの取り扱い
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                it.setBackgroundTint(resources.getColor(R.color.snackbarBackGround, null))
+              }
+            }
+        messageBar.show()
       }
     })
 
