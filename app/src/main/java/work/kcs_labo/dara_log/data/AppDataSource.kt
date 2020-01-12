@@ -4,7 +4,8 @@ import java.util.*
 
 interface AppDataSource {
   suspend fun loadCheckBoxDTOs(): List<CheckBoxDTO>
-  suspend fun registerCommittedTasks(committed: List<CommittedDTO>)
-  suspend fun getCommittedTasks(date: Calendar): List<CommittedDTO>
-  suspend fun deleteCommittedTasks(date: Calendar)
+  suspend fun registerCommittedDTOs(committed: List<CommittedDTO>)
+  suspend fun getCommittedDTOs(date: Calendar): List<CommittedDTO>
+  suspend fun getCommittedDTOs(): List<CommittedDTO>
+  suspend fun deleteCommittedDTOs(date: Calendar)
 }

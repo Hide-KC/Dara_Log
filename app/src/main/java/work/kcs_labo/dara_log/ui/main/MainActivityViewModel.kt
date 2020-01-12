@@ -10,30 +10,23 @@ import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.data.AppRepository
 import work.kcs_labo.dara_log.di.Injection
 import work.kcs_labo.dara_log.domain.entity.CheckBoxEntity
-import work.kcs_labo.dara_log.domain.entity.CommittedTaskEntity
-import work.kcs_labo.dara_log.domain.interactor.GetCommittedTasksInteractor
+import work.kcs_labo.dara_log.domain.entity.CommittedEntity
+import work.kcs_labo.dara_log.domain.interactor.CommittedEntityInteractor
 import work.kcs_labo.dara_log.domain.interactor.LoadCheckBoxEntitiesInteractor
-import work.kcs_labo.dara_log.domain.interactor.RegisterCommittedTasksInteractor
-import work.kcs_labo.dara_log.domain.usecase.GetCommittedTasksUseCase
+import work.kcs_labo.dara_log.domain.usecase.CommittedEntityUseCase
 import work.kcs_labo.dara_log.domain.usecase.LoadCheckBoxEntitiesUseCase
-import work.kcs_labo.dara_log.domain.usecase.RegisterCommittedTasksUseCase
 import work.kcs_labo.dara_log.util.LiveEvent
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class MainActivityViewModel(private val app: Application) : AndroidViewModel(app), CoroutineScope {
-  private val getCommittedTask: GetCommittedTasksUseCase = GetCommittedTasksInteractor(
+  private val committedEntityUseCase: CommittedEntityUseCase = CommittedEntityInteractor(
     Injection.provideTasksRepository(app.applicationContext)
   )
 
   private val loadCheckBoxEntities: LoadCheckBoxEntitiesUseCase = LoadCheckBoxEntitiesInteractor(
     Injection.provideTasksRepository(app.applicationContext)
   )
-
-  private val registerCommittedTasks: RegisterCommittedTasksUseCase =
-    RegisterCommittedTasksInteractor(
-      Injection.provideTasksRepository(app.applicationContext)
-    )
 
   private val job = Job()
 
@@ -65,9 +58,9 @@ class MainActivityViewModel(private val app: Application) : AndroidViewModel(app
     viewModelScope.launch(coroutineContext) {
       val committed = entities
         .filter { e -> e.isChecked }
-        .map { CommittedTaskEntity(date, it.text, it.shortText, it.imageId) }
-      registerCommittedTasks.registerCommittedTasks(committed)
-      val test = getCommittedTask.getCommittedTasks(date)
+        .map { CommittedEntity(date, it.text, it.shortText, it.imageId) }
+      committedEntityUseCase.registerCommittedEntities(committed)
+      val test = committedEntityUseCase.getCommittedEntities(date)
       for (t in test) {
         println("${t.date}, ${t.text}")
       }

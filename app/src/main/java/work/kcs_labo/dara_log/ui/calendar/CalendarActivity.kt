@@ -20,6 +20,13 @@ class CalendarActivity : AppCompatActivity() {
       it.viewModel = viewModel
       it.lifecycleOwner = this
     }
+
+    setSupportActionBar(binding.calendarToolbar)
+
+    val fragment = CalendarFragment.getInstance()
+    val transaction = supportFragmentManager.beginTransaction()
+    transaction.replace(R.id.calendar_contents, fragment)
+    transaction.commit()
   }
 
   fun obtainViewModel() = ViewModelProviders.of(this).get(CalendarActivityViewModel::class.java)

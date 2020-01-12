@@ -8,7 +8,7 @@ import work.kcs_labo.dara_log.data.CheckBoxDTO
 import work.kcs_labo.dara_log.data.CommittedDTO
 
 @Database(entities = [CheckBoxDTO::class, CommittedDTO::class], version = 1, exportSchema = false)
-abstract class AppLocalDatabase: RoomDatabase() {
+abstract class AppLocalDatabase : RoomDatabase() {
   abstract fun appDao(): AppDao
 
   companion object {

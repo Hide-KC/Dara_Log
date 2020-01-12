@@ -93,6 +93,9 @@ dependencies {
 
   // Google
   implementation "com.google.android.gms:play-services-ads:${versions.play_ads}"
+
+  // PinningListView
+  implementation "work.kcs_labo:pinninglistview:${versions.pinninglistview}"
 }
 
 apply plugin: 'com.google.gms.google-services'

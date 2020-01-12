@@ -13,7 +13,10 @@ interface AppDao {
   fun loadCheckBoxDTOs(): List<CheckBoxDTO>
 
   @Query("SELECT * FROM committed WHERE yyyymmdd=:yyyymmdd")
-  fun getCommittedTasks(yyyymmdd: String): List<CommittedDTO>
+  fun getCommittedDTOs(yyyymmdd: String): List<CommittedDTO>
+
+  @Query("SELECT * FROM committed")
+  fun getCommittedDTOs(): List<CommittedDTO>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   @JvmSuppressWildcards

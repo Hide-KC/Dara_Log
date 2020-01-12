@@ -11,22 +11,26 @@ class AppLocalDataSource(private val appDao: AppDao) : AppDataSource {
     return appDao.loadCheckBoxDTOs()
   }
 
-  override suspend fun registerCommittedTasks(committed: List<CommittedDTO>) {
+  override suspend fun registerCommittedDTOs(committed: List<CommittedDTO>) {
     appDao.registerCommittedTasks(committed)
   }
 
-  override suspend fun deleteCommittedTasks(date: Calendar) {
+  override suspend fun deleteCommittedDTOs(date: Calendar) {
     val sdfSrc = SimpleDateFormat("yyyyMMdd", Locale.JAPAN)
     val formatDate = sdfSrc.format(date.time)
 
     appDao.deleteCommittedTasks(formatDate)
   }
 
-  override suspend fun getCommittedTasks(date: Calendar): List<CommittedDTO> {
+  override suspend fun getCommittedDTOs(date: Calendar): List<CommittedDTO> {
     val sdfSrc = SimpleDateFormat("yyyyMMdd", Locale.JAPAN)
     val formatDate = sdfSrc.format(date.time)
 
-    return appDao.getCommittedTasks(formatDate)
+    return appDao.getCommittedDTOs(formatDate)
+  }
+
+  override suspend fun getCommittedDTOs(): List<CommittedDTO> {
+    return appDao.getCommittedDTOs()
   }
 
   suspend fun initCheckBoxes(checkBoxDTOs: List<CheckBoxDTO>) {
