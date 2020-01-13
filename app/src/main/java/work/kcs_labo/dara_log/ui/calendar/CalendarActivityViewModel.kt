@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import work.kcs_labo.dara_log.di.Injection
 import work.kcs_labo.dara_log.domain.interactor.CommittedEntityInteractor
 import work.kcs_labo.dara_log.domain.usecase.CommittedEntityUseCase
-import work.kcs_labo.dara_log.ui.view.Content
 import work.kcs_labo.dara_log.util.LiveEvent
 import kotlin.coroutines.CoroutineContext
 

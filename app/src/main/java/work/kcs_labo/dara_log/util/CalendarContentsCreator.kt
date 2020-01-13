@@ -1,6 +1,6 @@
 package work.kcs_labo.dara_log.util
 
-import work.kcs_labo.dara_log.ui.view.Content
+import work.kcs_labo.dara_log.ui.calendar.Content
 import java.util.*
 
 object CalendarContentsCreator {

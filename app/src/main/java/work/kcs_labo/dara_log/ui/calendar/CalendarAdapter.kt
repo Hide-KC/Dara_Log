@@ -1,4 +1,4 @@
-package work.kcs_labo.dara_log.ui.view
+package work.kcs_labo.dara_log.ui.calendar
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.CalendarHeaderBinding
 import work.kcs_labo.dara_log.databinding.CalendarItemBinding
-import work.kcs_labo.dara_log.ui.calendar.CalendarActivityViewModel
 import work.kcs_labo.pinninglistview.PinningListDBListener
 import java.util.*
 

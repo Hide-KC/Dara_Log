@@ -1,8 +1,8 @@
-package work.kcs_labo.dara_log.ui.view
+package work.kcs_labo.dara_log.ui.calendar
 
 import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
-import work.kcs_labo.dara_log.ui.view.CalendarAdapter.Companion.VIEW_TYPE_HEADER
+import work.kcs_labo.dara_log.ui.calendar.CalendarAdapter.Companion.VIEW_TYPE_HEADER
 
 class CalendarLayoutManager(context: Context, spanCount: Int, adapter: CalendarAdapter) :
   GridLayoutManager(context, spanCount) {

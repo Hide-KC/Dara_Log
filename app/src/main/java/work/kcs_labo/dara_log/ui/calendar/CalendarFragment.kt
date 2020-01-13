@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
 import work.kcs_labo.dara_log.databinding.CalendarFragmentBinding
-import work.kcs_labo.dara_log.ui.view.CalendarAdapter
-import work.kcs_labo.dara_log.ui.view.CalendarLayoutManager
-import work.kcs_labo.dara_log.ui.view.Content
 import work.kcs_labo.dara_log.util.CalendarContentsCreator
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -40,9 +37,17 @@ class CalendarFragment : Fragment(), CoroutineScope {
         it.lifecycleOwner = this
       }
 
-    val adapter = CalendarAdapter(viewModel, this.viewLifecycleOwner)
+    val adapter = CalendarAdapter(
+      viewModel,
+      this.viewLifecycleOwner
+    )
     binding.calendarContents.adapter = adapter
-    binding.calendarContents.layoutManager = CalendarLayoutManager(context!!, 7, adapter)
+    binding.calendarContents.layoutManager =
+      CalendarLayoutManager(
+        context!!,
+        7,
+        adapter
+      )
 
 
 

@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import work.kcs_labo.dara_log.ui.view.Content
 import java.util.*
 
 class CalendarContentsCreatorTest {

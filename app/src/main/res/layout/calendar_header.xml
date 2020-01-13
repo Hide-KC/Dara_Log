@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
 
   <data>
-    <variable name="header" type="work.kcs_labo.dara_log.ui.view.Content.CalendarHeader" />
+    <variable name="header" type="work.kcs_labo.dara_log.ui.calendar.Content" />
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
