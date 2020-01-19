@@ -1,6 +1,7 @@
 package work.kcs_labo.dara_log.util
 
 import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -53,6 +54,12 @@ open class LiveEvent<T> : LiveData<T>() {
   open fun call(t: T?) {
     dispatchedTagSet.clear()
     value = t
+  }
+
+  @WorkerThread
+  open fun post(t: T?) {
+    dispatchedTagSet.clear()
+    postValue(t)
   }
 
 }

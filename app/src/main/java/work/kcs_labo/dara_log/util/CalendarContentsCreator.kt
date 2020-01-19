@@ -9,12 +9,18 @@ object CalendarContentsCreator {
       .also {
         it.set(year, month, 1)
       }
+
+    println("${this.javaClass.simpleName}.firstCalendar: ${firstCalendar[Calendar.YEAR]}年${firstCalendar[Calendar.MONTH]}月${firstCalendar[Calendar.DATE]}日")
+
     val firstDayOfWeek = firstCalendar.get(Calendar.DAY_OF_WEEK)
     val lastCalendar = firstCalendar
       .also {
         it.add(Calendar.MONTH, 1)
         it.add(Calendar.DATE, -1)
       }
+
+    println("${this.javaClass.simpleName}.lastCalendar: ${lastCalendar[Calendar.YEAR]}年${lastCalendar[Calendar.MONTH]}月${lastCalendar[Calendar.DATE]}日")
+
     val weekCount = lastCalendar.get(Calendar.WEEK_OF_MONTH)
     val dateList = mutableListOf<Calendar>()
 

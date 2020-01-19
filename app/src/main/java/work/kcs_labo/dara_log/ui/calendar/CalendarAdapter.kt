@@ -66,7 +66,7 @@ class CalendarAdapter(
           }
       }
     }
-//    holder.binding.executePendingBindings()
+    holder.binding.executePendingBindings()
   }
 
   override fun getItemViewType(position: Int): Int {

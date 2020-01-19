@@ -1,4 +1,4 @@
-package work.kcs_labo.dara_log.ui.calendar;
+package work.kcs_labo.dara_log.ui.calendar
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -6,9 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.coroutines.*
+import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import work.kcs_labo.dara_log.databinding.CalendarFragmentBinding
 import work.kcs_labo.dara_log.util.CalendarContentsCreator
+import work.kcs_labo.dara_log.util.PagingScrollListener
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
@@ -20,7 +25,7 @@ import kotlin.coroutines.CoroutineContext
 class CalendarFragment : Fragment(), CoroutineScope {
   private var job: Job = Job()
   override val coroutineContext: CoroutineContext
-    get() = Dispatchers.Default
+    get() = Dispatchers.Main + job
 
   private lateinit var binding: CalendarFragmentBinding
 
@@ -41,15 +46,60 @@ class CalendarFragment : Fragment(), CoroutineScope {
       viewModel,
       this.viewLifecycleOwner
     )
-    binding.calendarContents.adapter = adapter
-    binding.calendarContents.layoutManager =
-      CalendarLayoutManager(
+
+    // RecyclerView Contentsの初期化
+    binding.calendarContents.also {
+      it.adapter = adapter
+
+      val layoutManager = CalendarLayoutManager(
         context!!,
         7,
         adapter
       )
+      it.layoutManager = layoutManager
+      it.clearOnScrollListeners()
 
+      it.addOnScrollListener(PagingScrollListener(layoutManager, reachedTop = {
+        val firstHeader = viewModel.getFirstCalendarHeader()
+        if (firstHeader != null) {
+          val calendar = Calendar.getInstance(Locale.JAPAN).also { c ->
+            c.set(
+              firstHeader.rawDate[Calendar.YEAR],
+              firstHeader.rawDate[Calendar.MONTH],
+              firstHeader.rawDate[Calendar.DATE]
+            )
+            c.add(Calendar.MONTH, -1)
+          }
 
+          println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH]} 月")
+          val newContents =
+            CalendarContentsCreator.create(calendar[Calendar.YEAR], calendar[Calendar.MONTH])
+
+          viewModel.insertCalendarContents(newContents, 0)
+        }
+      }, reachedBottom = {
+        val lastHeader = viewModel.getLastCalendarHeader()
+        if (lastHeader != null) {
+          val calendar = Calendar.getInstance(Locale.JAPAN).also { c ->
+            c.set(
+              lastHeader.rawDate[Calendar.YEAR],
+              lastHeader.rawDate[Calendar.MONTH],
+              lastHeader.rawDate[Calendar.DATE]
+            )
+            c.add(Calendar.MONTH, 1)
+          }
+
+          println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH]} 月")
+          val newContents =
+            CalendarContentsCreator.create(calendar[Calendar.YEAR], calendar[Calendar.MONTH])
+
+          viewModel.insertCalendarContents(
+            newContents,
+            viewModel.getCalendarContentsCount()
+          )
+        }
+      }))
+    }
 
     launch(coroutineContext) {
       val now = Calendar.getInstance(Locale.JAPAN)
@@ -59,7 +109,7 @@ class CalendarFragment : Fragment(), CoroutineScope {
 
       val mutableContents = mutableListOf<Content>()
 
-      for (month in thisMonth - 6..thisMonth + 6) {
+      for (month in thisMonth - 1..thisMonth + 1) {
         mutableContents.addAll(CalendarContentsCreator.create(thisYear, month))
       }
 
@@ -70,11 +120,13 @@ class CalendarFragment : Fragment(), CoroutineScope {
           c is Content.CalendarHeader && c.date == nowAsItem.date
         }
 
-      withContext(Dispatchers.Main) {
-        println("contents size in MAIN: ${contents.size}")
-        viewModel.setCalendarContents(contents)
-        binding.calendarContents.scrollToPosition(nowPosition)
-      }
+      viewModel.initCalendarContents(contents)
+
+      println("contents size in MAIN: ${contents.size}")
+      (binding.calendarContents.layoutManager as GridLayoutManager).scrollToPositionWithOffset(
+        nowPosition,
+        0
+      )
     }
 
     return binding.root
@@ -95,7 +147,6 @@ class CalendarFragment : Fragment(), CoroutineScope {
   override fun onDestroyView() {
     super.onDestroyView()
     println("onDestroyView")
-    this.job.cancel()
   }
 
   companion object {

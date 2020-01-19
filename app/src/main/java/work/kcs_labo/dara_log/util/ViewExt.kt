@@ -3,6 +3,7 @@ package work.kcs_labo.dara_log.util
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 @BindingAdapter("bind:srcVector")
@@ -17,7 +18,8 @@ fun ImageView.setVectorDrawable(imageId: Int?) {
   }
 }
 
-@BindingAdapter("bind:calendarUpdate")
-fun RecyclerView.onCalendarDataSetChanged(unit: Unit?) {
-  adapter?.notifyDataSetChanged()
+@BindingAdapter("bind:updateList")
+fun RecyclerView.updateContents(diffResult: DiffUtil.DiffResult?) {
+  adapter?.run { diffResult?.dispatchUpdatesTo(this) }
+  layoutManager?.onItemsChanged(this)
 }

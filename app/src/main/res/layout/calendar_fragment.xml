@@ -22,6 +22,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      bind:calendarUpdate="@{viewModel.onCalendarDataSetChanged}" />
+      bind:updateList="@{viewModel.onCalendarDataSetChanged}"
+      />
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
