@@ -7,6 +7,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+  signingConfigs {
+    release {
+      storeFile file(System.getenv("DARALOG_STOREFILE"))
+      storePassword System.getenv("DARALOG_STOREPWD")
+      keyAlias System.getenv("DARALOG_KEYALIAS")
+      keyPassword System.getenv("DARALOG_KEYPWD")
+    }
+  }
+
   compileSdkVersion buildConfig.appCompileSdk
   defaultConfig {
     applicationId "work.kcs_labo.dara_log"
@@ -25,6 +34,7 @@ android {
       buildConfigField("boolean", "IS_DEBUG", "false")
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
     }
   }
   dataBinding {
