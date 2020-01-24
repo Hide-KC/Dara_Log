@@ -1,5 +1,6 @@
 package work.kcs_labo.dara_log.ui.calendar
 
+import work.kcs_labo.dara_log.domain.entity.CommittedEntity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,7 +19,8 @@ sealed class Content {
   }
 
   data class CalendarItem(
-    private val _date: Calendar
+    private val _date: Calendar,
+    val _committedEntities: List<CommittedEntity>
   ) : Content() {
     val date: String
       get() {
@@ -28,5 +30,6 @@ sealed class Content {
       }
 
     val rawDate = _date
+
   }
 }

@@ -57,14 +57,8 @@ class MainFragment : Fragment() {
       if (!entities.isNullOrEmpty()) {
         val committed = entities
           .filter { e -> e.isChecked }
-        val date = Calendar.getInstance()
-          .also {
-            if (BuildConfig.IS_DEBUG) {
-              it.set(2020, 1, 1)
-            } else {
-              it.time
-            }
-          }
+        val date = Calendar.getInstance(Locale.JAPAN)
+          .also { it.time }
         viewModel.registerCommittedTasks(date, committed)
         val messageBar =
           Snackbar.make(binding.root, "記録しました。\nそのうちカレンダー表示も実装します。", Snackbar.LENGTH_LONG)

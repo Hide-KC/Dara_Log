@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
+import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.CalendarFragmentBinding
 import work.kcs_labo.dara_log.util.CalendarContentsCreator
 import work.kcs_labo.dara_log.util.PagingScrollListener
@@ -35,6 +35,17 @@ class CalendarFragment : Fragment(), CoroutineScope {
     savedInstanceState: Bundle?
   ): View? {
     val viewModel = (activity as CalendarActivity).obtainViewModel()
+      .also {
+        it.onCalendarHeaderClicked.observe(viewLifecycleOwner, "headerClicked", Observer { c ->
+          println("header: ${c.date}")
+
+        })
+        it.onCalendarItemClicked.observe(viewLifecycleOwner, "itemClicked", Observer { c ->
+          println("item: ${c.date}")
+          println("entities: ${c._committedEntities.size}")
+          it.setDetailImageLiveData(R.drawable.ic_ryourisuru_hito)
+        })
+      }
 
     binding = CalendarFragmentBinding.inflate(inflater, container, false)
       .also {
@@ -59,46 +70,48 @@ class CalendarFragment : Fragment(), CoroutineScope {
       it.layoutManager = layoutManager
       it.clearOnScrollListeners()
 
-      it.addOnScrollListener(PagingScrollListener(layoutManager, reachedTop = {
-        val firstHeader = viewModel.getFirstCalendarHeader()
-        if (firstHeader != null) {
-          val calendar = Calendar.getInstance(Locale.JAPAN).also { c ->
-            c.set(
-              firstHeader.rawDate[Calendar.YEAR],
-              firstHeader.rawDate[Calendar.MONTH],
-              firstHeader.rawDate[Calendar.DATE]
-            )
-            c.add(Calendar.MONTH, -1)
+      it.addOnScrollListener(PagingScrollListener(layoutManager,
+        reachedTop = {
+          val firstHeader = viewModel.getFirstCalendarHeader()
+          if (firstHeader != null) {
+            val calendar = Calendar.getInstance(Locale.JAPAN).also { c ->
+              c.set(
+                firstHeader.rawDate[Calendar.YEAR],
+                firstHeader.rawDate[Calendar.MONTH],
+                firstHeader.rawDate[Calendar.DATE]
+              )
+              c.add(Calendar.MONTH, -1)
+            }
+
+            println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH] + 1} 月")
+            val newContents =
+              CalendarContentsCreator.create(viewModel, calendar[Calendar.YEAR], calendar[Calendar.MONTH])
+
+            viewModel.insertCalendarContents(newContents, 0)
           }
+        }, reachedBottom = {
+          val lastHeader = viewModel.getLastCalendarHeader()
+          if (lastHeader != null) {
+            val calendar = Calendar.getInstance(Locale.JAPAN).also { c ->
+              c.set(
+                lastHeader.rawDate[Calendar.YEAR],
+                lastHeader.rawDate[Calendar.MONTH],
+                lastHeader.rawDate[Calendar.DATE]
+              )
+              c.add(Calendar.MONTH, 1)
+            }
 
-          println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH]} 月")
-          val newContents =
-            CalendarContentsCreator.create(calendar[Calendar.YEAR], calendar[Calendar.MONTH])
+            println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH] + 1} 月")
+            val newContents =
+              CalendarContentsCreator.create(viewModel, calendar[Calendar.YEAR], calendar[Calendar.MONTH])
 
-          viewModel.insertCalendarContents(newContents, 0)
-        }
-      }, reachedBottom = {
-        val lastHeader = viewModel.getLastCalendarHeader()
-        if (lastHeader != null) {
-          val calendar = Calendar.getInstance(Locale.JAPAN).also { c ->
-            c.set(
-              lastHeader.rawDate[Calendar.YEAR],
-              lastHeader.rawDate[Calendar.MONTH],
-              lastHeader.rawDate[Calendar.DATE]
+            viewModel.insertCalendarContents(
+              newContents,
+              viewModel.getCalendarContentsCount()
             )
-            c.add(Calendar.MONTH, 1)
           }
-
-          println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH]} 月")
-          val newContents =
-            CalendarContentsCreator.create(calendar[Calendar.YEAR], calendar[Calendar.MONTH])
-
-          viewModel.insertCalendarContents(
-            newContents,
-            viewModel.getCalendarContentsCount()
-          )
-        }
-      }))
+        })
+      )
     }
 
     launch(coroutineContext) {
@@ -110,7 +123,7 @@ class CalendarFragment : Fragment(), CoroutineScope {
       val mutableContents = mutableListOf<Content>()
 
       for (month in thisMonth - 1..thisMonth + 1) {
-        mutableContents.addAll(CalendarContentsCreator.create(thisYear, month))
+        mutableContents.addAll(CalendarContentsCreator.create(viewModel, thisYear, month))
       }
 
       val contents = mutableContents.toList()
@@ -120,14 +133,19 @@ class CalendarFragment : Fragment(), CoroutineScope {
           c is Content.CalendarHeader && c.date == nowAsItem.date
         }
 
-      viewModel.initCalendarContents(contents)
+      withContext(Dispatchers.Main) {
+        println("contents size in MAIN: ${contents.size}")
+        viewModel.initCalendarContents(contents)
 
-      println("contents size in MAIN: ${contents.size}")
-      (binding.calendarContents.layoutManager as GridLayoutManager).scrollToPositionWithOffset(
-        nowPosition,
-        0
-      )
+        delay(100)
+        (binding.calendarContents.layoutManager as GridLayoutManager).scrollToPositionWithOffset(
+          nowPosition,
+          0
+        )
+      }
     }
+
+    println("existEntity: ${viewModel.committedEntitiesLiveData.value}")
 
     return binding.root
   }
@@ -145,6 +163,7 @@ class CalendarFragment : Fragment(), CoroutineScope {
   }
 
   override fun onDestroyView() {
+    binding.calendarContents?.clearOnScrollListeners()
     super.onDestroyView()
     println("onDestroyView")
   }

@@ -23,6 +23,8 @@ class CommittedEntityInteractor(private val repository: AppRepository) :
       val sdfSource = SimpleDateFormat("yyyyMMdd", Locale.JAPAN)
       val parseDate = sdfSource.format(committed[0].date.time)
 
+      println("parseDate: $parseDate")
+
       val sameDTO = if (!registered.isNullOrEmpty()) {
         registered.find { dto -> dto.text == entity.text }
       } else {

@@ -23,13 +23,13 @@ class CalendarAdapter(
   override val headerLayout: Int?
     get() = getLayoutRes(VIEW_TYPE_HEADER)
 
-  override fun bindHeaderData(binding: ViewDataBinding, adapterPosition: Int) {
-    val content = viewModel.getCalendarContent(adapterPosition) as Content.CalendarHeader
+  override fun bindHeaderData(binding: ViewDataBinding, position: Int) {
+    val content = viewModel.getCalendarContent(position) as Content.CalendarHeader
     (binding as CalendarHeaderBinding).header = content
   }
 
-  override fun getCurrentHeaderPosition(adapterPosition: Int): Int? {
-    var index = adapterPosition
+  override fun getCurrentHeaderPosition(position: Int): Int? {
+    var index = position
     while (index > -1) {
       if (isHeader(index)) return index
       index--
@@ -37,8 +37,8 @@ class CalendarAdapter(
     return null
   }
 
-  override fun isHeader(adapterPosition: Int): Boolean =
-    viewModel.getCalendarContent(adapterPosition) is Content.CalendarHeader
+  override fun isHeader(position: Int): Boolean =
+    viewModel.getCalendarContent(position) is Content.CalendarHeader
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentViewHolder =
     ContentViewHolder(
@@ -56,6 +56,9 @@ class CalendarAdapter(
           .also {
             it.header = content
             it.lifecycleOwner = parentLifecycleOwner
+            it.root.setOnClickListener{
+              viewModel.onCalendarHeaderClicked.call(content)
+            }
           }
       }
       is Content.CalendarItem -> {
@@ -63,6 +66,9 @@ class CalendarAdapter(
           .also {
             it.item = content
             it.lifecycleOwner = parentLifecycleOwner
+            it.root.setOnClickListener {
+              viewModel.onCalendarItemClicked.call(content)
+            }
           }
       }
     }

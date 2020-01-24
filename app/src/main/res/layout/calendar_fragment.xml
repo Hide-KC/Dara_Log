@@ -18,11 +18,34 @@
       android:id="@+id/calendar_contents"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/content_detail"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      bind:updateList="@{viewModel.onCalendarDataSetChanged}"
-      />
+      bind:updateList="@{viewModel.onCalendarDataSetChanged}" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/content_detail"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent">
+
+      <ImageView
+        android:id="@+id/content_icon"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        tools:src="@drawable/ic_yokoninattekanngaeru_hito"
+        app:imageResource="@{viewModel.contentDetailImageLiveData}"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

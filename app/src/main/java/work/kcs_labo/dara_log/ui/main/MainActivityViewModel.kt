@@ -16,6 +16,7 @@ import work.kcs_labo.dara_log.domain.interactor.LoadCheckBoxEntitiesInteractor
 import work.kcs_labo.dara_log.domain.usecase.CommittedEntityUseCase
 import work.kcs_labo.dara_log.domain.usecase.LoadCheckBoxEntitiesUseCase
 import work.kcs_labo.dara_log.util.LiveEvent
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
@@ -58,12 +59,15 @@ class MainActivityViewModel(private val app: Application) : AndroidViewModel(app
     viewModelScope.launch(coroutineContext) {
       val committed = entities
         .filter { e -> e.isChecked }
-        .map { CommittedEntity(date, it.text, it.shortText, it.imageId) }
+        .map {
+          val d = Calendar.getInstance(Locale.JAPAN)
+            .also {c ->
+              c.set(Calendar.YEAR, date[Calendar.YEAR])
+              c.set(Calendar.MONTH, date[Calendar.MONTH])
+              c.set(Calendar.DATE, date[Calendar.DATE])
+            }
+          CommittedEntity(d, it.text, it.shortText, it.imageId) }
       committedEntityUseCase.registerCommittedEntities(committed)
-      val test = committedEntityUseCase.getCommittedEntities(date)
-      for (t in test) {
-        println("${t.date}, ${t.text}")
-      }
     }
   }
 
