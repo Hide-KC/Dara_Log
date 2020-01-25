@@ -1,5 +1,7 @@
 package work.kcs_labo.dara_log.ui.calendar
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,17 +58,26 @@ class CalendarAdapter(
           .also {
             it.header = content
             it.lifecycleOwner = parentLifecycleOwner
-            it.root.setOnClickListener{
+            it.root.setOnClickListener {
               viewModel.onCalendarHeaderClicked.call(content)
             }
           }
       }
       is Content.CalendarItem -> {
         (holder.binding as CalendarItemBinding)
-          .also {
-            it.item = content
-            it.lifecycleOwner = parentLifecycleOwner
-            it.root.setOnClickListener {
+          .also { binding ->
+            binding.item = content
+            binding.lifecycleOwner = parentLifecycleOwner
+
+            val resId = if (content._committedEntities.isNotEmpty()) {
+              content._committedEntities[0].imageId
+            } else {
+              R.drawable.ic_yokoninattekanngaeru_hito_zzz
+            }
+
+            binding.pictogram.setImageResource(resId)
+
+            binding.root.setOnClickListener {
               viewModel.onCalendarItemClicked.call(content)
             }
           }

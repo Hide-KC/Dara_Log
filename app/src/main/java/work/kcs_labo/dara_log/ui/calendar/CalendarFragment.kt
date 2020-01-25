@@ -1,5 +1,7 @@
 package work.kcs_labo.dara_log.ui.calendar
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -8,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import work.kcs_labo.dara_log.R
 import work.kcs_labo.dara_log.databinding.CalendarFragmentBinding
@@ -28,6 +29,7 @@ class CalendarFragment : Fragment(), CoroutineScope {
     get() = Dispatchers.Main + job
 
   private lateinit var binding: CalendarFragmentBinding
+  private lateinit var animator: Animator
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -35,23 +37,76 @@ class CalendarFragment : Fragment(), CoroutineScope {
     savedInstanceState: Bundle?
   ): View? {
     val viewModel = (activity as CalendarActivity).obtainViewModel()
-      .also {
-        it.onCalendarHeaderClicked.observe(viewLifecycleOwner, "headerClicked", Observer { c ->
-          println("header: ${c.date}")
-
-        })
-        it.onCalendarItemClicked.observe(viewLifecycleOwner, "itemClicked", Observer { c ->
-          println("item: ${c.date}")
-          println("entities: ${c._committedEntities.size}")
-          it.setDetailImageLiveData(R.drawable.ic_ryourisuru_hito)
-        })
-      }
 
     binding = CalendarFragmentBinding.inflate(inflater, container, false)
       .also {
         it.viewModel = viewModel
         it.lifecycleOwner = this
       }
+
+    viewModel.let {
+      it.onCalendarHeaderClicked.observe(viewLifecycleOwner, "headerClicked", Observer { c ->
+        println("header: ${c.date}")
+      })
+      it.onCalendarItemClicked.observe(viewLifecycleOwner, "itemClicked", Observer { c ->
+        println("item: ${c.date}")
+        println("entities: ${c._committedEntities.size}")
+        animator.cancel()
+
+        animator = when {
+          c._committedEntities.size <= 1 -> AnimatorInflater.loadAnimator(
+            activity,
+            R.animator.anim_content_fade_in
+          )
+          else -> AnimatorInflater.loadAnimator(activity, R.animator.anim_content_fade_inout)
+        }.also { anim -> anim.setTarget(binding.contentIcon) }
+
+        when {
+          c._committedEntities.isEmpty() -> {
+            it.setDetailImage(R.drawable.ic_yokoninattekanngaeru_hito_zzz)
+          }
+          c._committedEntities.size == 1 -> {
+            it.setDetailImage(c._committedEntities[0].imageId)
+          }
+          else -> {
+            it.setDetailImage(c._committedEntities[0].imageId)
+            animator.addListener(object : Animator.AnimatorListener {
+              private var canceled = false
+              private var index = 0
+
+              override fun onAnimationRepeat(animation: Animator?) {}
+
+              override fun onAnimationEnd(animation: Animator?) {
+                if (canceled) {
+                  animator.removeAllListeners()
+                } else {
+                  if (index < c._committedEntities.lastIndex) {
+                    index++
+                  } else {
+                    index = 0
+                  }
+                  it.setDetailImage(c._committedEntities[index].imageId)
+                  animation?.start()
+                }
+              }
+
+              override fun onAnimationCancel(animation: Animator?) {
+                canceled = true
+              }
+
+              override fun onAnimationStart(animation: Animator?) {
+                canceled = false
+              }
+            })
+          }
+        }
+        animator.start()
+      })
+    }
+
+    // Animatorの初期化
+    animator = AnimatorInflater.loadAnimator(activity, R.animator.anim_content_fade_inout)
+    animator.setTarget(binding.contentIcon)
 
     val adapter = CalendarAdapter(
       viewModel,
@@ -85,7 +140,11 @@ class CalendarFragment : Fragment(), CoroutineScope {
 
             println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH] + 1} 月")
             val newContents =
-              CalendarContentsCreator.create(viewModel, calendar[Calendar.YEAR], calendar[Calendar.MONTH])
+              CalendarContentsCreator.create(
+                viewModel.committedEntities,
+                calendar[Calendar.YEAR],
+                calendar[Calendar.MONTH]
+              )
 
             viewModel.insertCalendarContents(newContents, 0)
           }
@@ -103,7 +162,11 @@ class CalendarFragment : Fragment(), CoroutineScope {
 
             println("${calendar[Calendar.YEAR]} 年 ${calendar[Calendar.MONTH] + 1} 月")
             val newContents =
-              CalendarContentsCreator.create(viewModel, calendar[Calendar.YEAR], calendar[Calendar.MONTH])
+              CalendarContentsCreator.create(
+                viewModel.committedEntities,
+                calendar[Calendar.YEAR],
+                calendar[Calendar.MONTH]
+              )
 
             viewModel.insertCalendarContents(
               newContents,
@@ -123,7 +186,13 @@ class CalendarFragment : Fragment(), CoroutineScope {
       val mutableContents = mutableListOf<Content>()
 
       for (month in thisMonth - 1..thisMonth + 1) {
-        mutableContents.addAll(CalendarContentsCreator.create(viewModel, thisYear, month))
+        mutableContents.addAll(
+          CalendarContentsCreator.create(
+            viewModel.committedEntities,
+            thisYear,
+            month
+          )
+        )
       }
 
       val contents = mutableContents.toList()
@@ -145,8 +214,6 @@ class CalendarFragment : Fragment(), CoroutineScope {
       }
     }
 
-    println("existEntity: ${viewModel.committedEntitiesLiveData.value}")
-
     return binding.root
   }
 
@@ -163,9 +230,9 @@ class CalendarFragment : Fragment(), CoroutineScope {
   }
 
   override fun onDestroyView() {
-    binding.calendarContents?.clearOnScrollListeners()
     super.onDestroyView()
-    println("onDestroyView")
+    binding.calendarContents?.clearOnScrollListeners()
+    animator.cancel()
   }
 
   companion object {

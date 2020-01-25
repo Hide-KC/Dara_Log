@@ -46,6 +46,7 @@ class CheckBoxListAdapter(
             viewModel.setImageId(R.drawable.av_yokoninattekanngaeru)
           }
         }
+        viewModel.onCheckStateChanged.call(Unit)
       }
     }
   }

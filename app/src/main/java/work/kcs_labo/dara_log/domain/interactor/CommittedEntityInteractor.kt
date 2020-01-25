@@ -48,7 +48,7 @@ class CommittedEntityInteractor(private val repository: AppRepository) :
     committedDTOs.map { dto ->
       val sdfSource = SimpleDateFormat("yyyyMMdd", Locale.JAPAN)
       val parseDate = sdfSource.parse(dto.yyyymmdd)
-      val calendar = Calendar.getInstance()
+      val calendar = Calendar.getInstance(Locale.JAPAN)
         .also { it.time = parseDate }
 
       CommittedEntity(

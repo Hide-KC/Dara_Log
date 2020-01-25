@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:ads="http://schemas.android.com/apk/res-auto"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:bind="http://schemas.android.com/apk/res-auto">
@@ -20,7 +21,7 @@
       android:id="@+id/imageView"
       android:layout_width="140dp"
       android:layout_height="140dp"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="8dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -30,9 +31,9 @@
       android:id="@+id/recyclerView"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_marginTop="16dp"
-      android:layout_marginBottom="4dp"
-      app:layout_constraintBottom_toTopOf="@+id/main_adView"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      ads:layout_constraintBottom_toTopOf="@+id/make_log_btn"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -41,12 +42,11 @@
       android:id="@+id/make_log_btn"
       android:layout_width="160dp"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="24dp"
+      android:layout_marginBottom="8dp"
       android:text="@string/make_log"
       android:textSize="18sp"
-      app:layout_constraintBottom_toBottomOf="parent"
+      ads:layout_constraintBottom_toTopOf="@+id/main_adView"
       app:layout_constraintEnd_toStartOf="@+id/tweet_log_btn"
-      app:layout_constraintHorizontal_bias="0.5"
       app:layout_constraintHorizontal_chainStyle="spread"
       app:layout_constraintStart_toStartOf="parent" />
 
@@ -54,22 +54,20 @@
       android:id="@+id/tweet_log_btn"
       android:layout_width="160dp"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="24dp"
+      android:layout_marginBottom="8dp"
       android:text="@string/tweet_log"
       android:textSize="18sp"
-      app:layout_constraintBottom_toBottomOf="parent"
+      ads:layout_constraintBottom_toTopOf="@+id/main_adView"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.5"
       app:layout_constraintStart_toEndOf="@+id/make_log_btn" />
 
     <com.google.android.gms.ads.AdView
       android:id="@+id/main_adView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="4dp"
-      ads:adUnitId="@string/admob_main_banner_id"
       ads:adSize="BANNER"
-      app:layout_constraintBottom_toTopOf="@+id/make_log_btn"
+      ads:adUnitId="@string/admob_main_banner_id"
+      ads:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
   </androidx.constraintlayout.widget.ConstraintLayout>

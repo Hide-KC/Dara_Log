@@ -1,11 +1,12 @@
 package work.kcs_labo.dara_log.util
 
+import work.kcs_labo.dara_log.domain.entity.CommittedEntity
 import work.kcs_labo.dara_log.ui.calendar.CalendarActivityViewModel
 import work.kcs_labo.dara_log.ui.calendar.Content
 import java.util.*
 
 object CalendarContentsCreator {
-  fun create(viewModel: CalendarActivityViewModel, year: Int, month: Int): List<Content> {
+  fun create(entities: List<CommittedEntity>, year: Int, month: Int): List<Content> {
     val firstCalendar = Calendar.getInstance(Locale.JAPAN)
       .also {
         it.set(year, month, 1)
@@ -43,7 +44,11 @@ object CalendarContentsCreator {
     }
 
     for (i in 0 until dateList.count()) {
-      val filteredEntities = viewModel.getCommittedEntities(dateList[i])
+      val filteredEntities = entities.filter { e ->
+        e.date[Calendar.YEAR] == dateList[i][Calendar.YEAR] &&
+          e.date[Calendar.MONTH] == dateList[i][Calendar.MONTH] &&
+          e.date[Calendar.DATE] == dateList[i][Calendar.DATE]
+      }
       if (filteredEntities.isNotEmpty()) {
         println("filteredEntities: $filteredEntities")
       }

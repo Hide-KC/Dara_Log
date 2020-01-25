@@ -1,6 +1,7 @@
 package work.kcs_labo.dara_log.ui.main
 
 import android.app.Application
+import androidx.annotation.MainThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,6 +45,7 @@ class MainActivityViewModel(private val app: Application) : AndroidViewModel(app
 
   val onClickMakeLogBtnEvent = LiveEvent<Unit>()
   val onClickTweetLogBtnEvent = LiveEvent<Unit>()
+  val onCheckStateChanged = LiveEvent<Unit>()
 
   private var position: Int = 0
 
@@ -55,6 +57,7 @@ class MainActivityViewModel(private val app: Application) : AndroidViewModel(app
     onClickTweetLogBtnEvent.call(Unit)
   }
 
+  @MainThread
   fun registerCommittedTasks(date: Calendar, entities: List<CheckBoxEntity>) {
     viewModelScope.launch(coroutineContext) {
       val committed = entities

@@ -41,13 +41,13 @@ class CalendarActivityViewModel(
   val contentsLiveData: LiveData<List<Content>>
     get() = _contentsLiveData
 
+  private var _committedEntities: List<CommittedEntity> = listOf()
+  val committedEntities: List<CommittedEntity>
+    get() = _committedEntities
+
   private val _contentDetailImageLiveData = MutableLiveData<Int>()
   val contentDetailImageLiveData: LiveData<Int>
     get() = _contentDetailImageLiveData
-
-  private val _committedEntitiesLiveData = MutableLiveData<List<CommittedEntity>>(listOf())
-  val committedEntitiesLiveData: LiveData<List<CommittedEntity>>
-    get() = _committedEntitiesLiveData
 
   val onCalendarDataSetChanged = LiveEvent<DiffUtil.DiffResult>()
   val onCalendarHeaderClicked = LiveEvent<Content.CalendarHeader>()
@@ -59,20 +59,33 @@ class CalendarActivityViewModel(
 
   private fun loadCommittedEntities() {
     viewModelScope.launch(coroutineContext) {
-      _committedEntitiesLiveData.postValue(committedEntityUseCase.getCommittedEntities())
+      _committedEntities = committedEntityUseCase.getCommittedEntities()
     }
   }
 
-  fun getCommittedEntities(): List<CommittedEntity> = _committedEntitiesLiveData.value ?: listOf()
+  /**
+   * CalendarFragmentでCommittedを編集する
+   */
+  fun editCommittedEntities(date: Calendar) {
+    /*
+    * forで_contentsLiveDataを走査、
+    * dateが一致するCalendarItemを削除
+    * 同じポジションに新たなCalendarItemを配置
+    * onCalendarDataSetChanged()
+    * */
+  }
 
   fun getCommittedEntities(date: Calendar): List<CommittedEntity> =
-    _committedEntitiesLiveData.value?.filter { entity ->
-      entity.date[Calendar.YEAR] == date[Calendar.YEAR] &&
-      entity.date[Calendar.MONTH] == date[Calendar.MONTH] &&
-      entity.date[Calendar.DATE] == date[Calendar.DATE]
-    } ?: listOf()
+    (_contentsLiveData.value?.let { contents ->
+      contents.find { c ->
+        c is Content.CalendarItem &&
+          c.rawDate[Calendar.YEAR] == date[Calendar.YEAR] &&
+          c.rawDate[Calendar.MONTH] == date[Calendar.MONTH] &&
+          c.rawDate[Calendar.DATE] == date[Calendar.DATE]
+      } as Content.CalendarItem
+    })?._committedEntities ?: listOf()
 
-  fun setDetailImageLiveData(@DrawableRes res: Int) {
+  fun setDetailImage(@DrawableRes res: Int) {
     _contentDetailImageLiveData.value = res
   }
 
@@ -81,27 +94,28 @@ class CalendarActivityViewModel(
       ?: throw IllegalStateException("ContentList is not Initialized")
 
   fun getLastCalendarHeader(): Content.CalendarHeader? {
-    val contents = _contentsLiveData.value
-    if (contents != null) {
-      for (i in contents.lastIndex downTo 0 step 1) {
-        val content = getCalendarContent(i)
-        if (content is Content.CalendarHeader) return content
+    val content =
+      _contentsLiveData.value?.let {contents ->
+        contents.findLast { c -> c is Content.CalendarHeader }
       }
-      return null
+
+    return if (content != null) {
+      content as Content.CalendarHeader
     } else {
-      throw IllegalStateException("ContentList is not Initialized")
+      null
     }
   }
 
   fun getFirstCalendarHeader(): Content.CalendarHeader? {
-    val contents = _contentsLiveData.value
-    if (contents != null) {
-      contents.forEach { content ->
-        if (content is Content.CalendarHeader) return content
+    val content =
+      _contentsLiveData.value?.let { contents ->
+        contents.find { c -> c is Content.CalendarHeader }
       }
-      return null
+
+    return if (content != null) {
+      content as Content.CalendarHeader
     } else {
-      throw IllegalStateException("ContentList is not Initialized")
+      null
     }
   }
 
